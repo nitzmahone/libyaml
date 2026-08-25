@@ -2,27 +2,54 @@ name: dist
 
 on:
   push:
-    branches: [ release/* ]
+    branches: [ '*' ]
+#    branches: [ release/* ]
+
 
 jobs:
   dist:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v6
-    - run: env | sort
+#    - uses: actions/checkout@v7
+#    - run: env | sort
+#
+#    - uses: docker/setup-buildx-action@v4
+#    - uses: docker/build-push-action
+#      with:
+#        context: pkg/docker
+#        tags: yamlio/libyaml-build:latest
+#
 
-    - name: Get image
-      run: |
-        time docker pull yamlio/libyaml-dev
-        docker images | grep libyaml
+    - uses: docker/github-builder/.github/workflows/build.yml@v1
+      permissions:
+        contents: read
+        id-token: write
+      with:
+        output: image
+        context: pkg/docker
+        cache: true
+        sbom: true
+        meta-tags: |
+          libyaml-internal/dist-build
 
     - run: |
-        make -C pkg/docker libyaml-dist-ci
-        ls -l pkg/docker/output
+        docker images | grep dist-build
 
-    - uses: actions/upload-artifact@v7
-      with:
-        name: release
-        path: pkg/docker/output/yaml-0*
+
+#    - name: Get image
+#      run: |
+#        time docker pull yamlio/libyaml-dev
+#        docker images | grep libyaml
+
+#    - run: |
+#        make -C pkg/docker libyaml-dist-ci
+#        ls -l pkg/docker/output
+
+#
+#
+#    - uses: actions/upload-artifact@v7
+#      with:
+#        name: release
+#        path: pkg/docker/output/yaml-0*
 
