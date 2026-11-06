@@ -1,55 +1,29 @@
 name: dist
 
 on:
-  push:
-    branches: [ '*' ]
+  workflow_dispatch:
+#  push:
 #    branches: [ release/* ]
-
 
 jobs:
   dist:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/libyaml-dist:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
 
     steps:
-#    - uses: actions/checkout@v7
-#    - run: env | sort
-#
-#    - uses: docker/setup-buildx-action@v4
-#    - uses: docker/build-push-action
-#      with:
-#        context: pkg/docker
-#        tags: yamlio/libyaml-build:latest
-#
+    - uses: actions/checkout@v7
 
-    - uses: docker/github-builder/.github/workflows/build.yml@v1
-      permissions:
-        contents: read
-        id-token: write
+    - name: Build dist artifacts
+      run: |
+        make -C pkg/docker libyaml-dist-ci
+        ls -l pkg/docker/output
+
+    - name: Upload dist artifacts
+      uses: actions/upload-artifact@v7
       with:
-        output: image
-        context: pkg/docker
-        cache: true
-        sbom: true
-        meta-tags: |
-          libyaml-internal/dist-build
-
-    - run: |
-        docker images | grep dist-build
-
-
-#    - name: Get image
-#      run: |
-#        time docker pull yamlio/libyaml-dev
-#        docker images | grep libyaml
-
-#    - run: |
-#        make -C pkg/docker libyaml-dist-ci
-#        ls -l pkg/docker/output
-
-#
-#
-#    - uses: actions/upload-artifact@v7
-#      with:
-#        name: release
-#        path: pkg/docker/output/yaml-0*
-
+        name: release
+        path: pkg/docker/output/yaml-0*
