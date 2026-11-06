@@ -27,7 +27,7 @@ AC_PREREQ(2.59)
 AC_INIT([yaml], [YAML_MAJOR.YAML_MINOR.YAML_PATCH], [YAML_BUGS])
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_HEADERS([include/config.h])
-AM_INIT_AUTOMAKE([1.9 foreign])
+AM_INIT_AUTOMAKE([1.9 foreign dist-zip])
 
 # Define macro variables for the package version numbers.
 AC_DEFINE(YAML_VERSION_MAJOR, YAML_MAJOR, [Define the major version number.])
@@ -53,13 +53,12 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
-AC_PROG_LIBTOOL
+LT_INIT
 
 AC_CHECK_PROG(DOXYGEN, [doxygen], [true], [false])
 AM_CONDITIONAL(DOXYGEN, [test "$DOXYGEN" = true])
 
 # Checks for header files.
-AC_HEADER_STDC
 AC_CHECK_HEADERS([stdlib.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
