@@ -49,5 +49,5 @@ ifeq ($(LIBYAML_TEST_SUITE_RUN_REPO),$(LIBYAML_TEST_SUITE_RUN_REPO_DEFAULT))
 docker-build:
 	make -C pkg/docker build
 
-docker-dist:
-	make -C pkg/docker libyaml-dist
+dist-docker:
+	make -C pkg/docker dist-docker-local

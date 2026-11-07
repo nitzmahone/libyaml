@@ -29,9 +29,6 @@ jobs:
         echo "ARTIFACT_NAME_ZIP=$(ls yaml-*.zip)" >> "$GITHUB_OUTPUT"
         echo "ARTIFACT_PATH_ZIP=$(realpath yaml-*.zip)" >> "$GITHUB_OUTPUT"
 
-#        make -C pkg/docker libyaml-dist-ci
-#        ls -l pkg/docker/output
-
     - name: Upload tgz artifact
       uses: actions/upload-artifact@v7
       with:
